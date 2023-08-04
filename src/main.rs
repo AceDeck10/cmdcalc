@@ -63,7 +63,7 @@ fn subtract(args: Vec<i32>) -> i32 {
 
 // Multiply the provided parameters
 fn multiply(args: Vec<i32>) -> i32{
-    let mut result: i32 = 0;
+    let mut result: i32 = 1;
     for arg in args {
         result *= arg;
     }
@@ -73,9 +73,9 @@ fn multiply(args: Vec<i32>) -> i32{
 
 // Divide the provided parameters
 fn divide(args: Vec<i32>) -> i32 {
-    let mut result: i32 = 0;
+    let mut result: i32 = 1;
     for arg in args {
-        result /= arg;
+        result = arg / result;
     }
 
     return result;
