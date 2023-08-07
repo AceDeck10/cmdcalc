@@ -13,6 +13,7 @@ windows: `<Path-to-cmdcalc.exe> <OPTION> <ARGS>`
 
 Linux  : `cmdcalc <options> <ARGS>`
 
+
 eg.      `cmdcalc.exe add 30 50` will add 30 to 50
 
 output:   `Result = 80`
