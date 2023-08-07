@@ -7,12 +7,11 @@ Project is currently under development. Theres no 'official' build available for
 To build it yourself, clone the repository and compile using Rust's compiler.
 
 # Usage
-Open yor command line or terminal
+Open your command line or terminal
 
 windows: `<Path-to-cmdcalc.exe> <OPTION> <ARGS>`
 
 Linux  : `cmdcalc <options> <ARGS>`
-
 
 eg.      `cmdcalc.exe add 30 50` will add 30 to 50
 
