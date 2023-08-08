@@ -116,17 +116,19 @@ fn divide(args: Vec<String>) -> Option<f64> {
     return Some(result);
 }
 
-fn square(args: Vec<String>) -> Option<f64> {
-    let mut result: f64 = 1.0;
-    for arg_str in args {
-        match arg_str.parse::<f64>() {
-            Ok(arg) => result = arg * arg,
-            Err(_) => return None // Return None if parsing fails
-        }
-    }
-
-    return Some(result);
+// Square function
+fn square(args: Vec<String>) -> f64 {
+    let arg = args[0].parse::<f64>().unwrap();
+    let result = arg * arg;
+    return result;
 }
+
+// power function
+/*fn power(args: Vec<String>) -> f64 {
+    let base = args[0].parse::<f64>().unwrap();
+    let num = args[1].parse::<f64>().unwrap();
+    let exp = args[2].parse::<f64>().unwrap();  
+}*/
 
 fn main() {
     let opt = Opt::from_args();
@@ -199,6 +201,8 @@ fn main() {
         },
 
         Some(Command::Square{ args }) => {
+            let sqr_arg  = args[0].parse::<f64>().expect("Error: Invalid argument");
+
             if args.is_empty()  {
                 // Error handling in case user enters subcommand without providing arguments
                 eprintln!("Error: Subcommand 'sqr' requires at least one argument.");
@@ -207,15 +211,17 @@ fn main() {
             else if args.len() > 1 {
                 // Error handling in case user enters subcommand without arguments
                 eprintln!("Error: Subcommand 'sqr' requires a maximum of one argument.");
+            }
+
+            else if sqr_arg.is_nan() {
+                // Error handling in case user enters string that cannot be converted to f64
+                eprintln!("Error: Subcommand 'sqr' requires a maximum of one argument.");
             }   
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                match square(args) {
-                    Some(result) => println!("Result: {}", result),
-                    None => println!("Invalid input provided or division by zero!"),
-                }
+                println!("Result: {}", square(args));
             }
         },
 
