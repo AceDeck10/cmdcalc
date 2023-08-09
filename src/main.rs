@@ -214,6 +214,7 @@ fn main() {
             }
 
             else if sqr_arg.is_nan() {
+                // Program panics before getting to this stage. Will fix later
                 // Error handling in case user enters string that cannot be converted to f64
                 eprintln!("Error: Subcommand 'sqr' requires a maximum of one argument.");
             }   
