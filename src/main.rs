@@ -1,8 +1,14 @@
 // **
+//
 // Command Line Calculator or cmdcalc for short
 // For those who'd rather not use GUI calculators
 //
 // @author Austine D. Odhiambo aka Ace Declan
+//
+// Errors: The program genarates two types of errors
+// ** Usage Errors or Application Errors
+// ** Errors resulting from wrong usage by the user should be marked as usage errors
+// ** Errors resulting from the program panicing should ge marked as application errors
 //
 // ** **
 
@@ -95,25 +101,17 @@ fn multiply(args: Vec<String>) -> Option<f64>{
 
 // Divide the provided parameters
 fn divide(args: Vec<String>) -> Option<f64> {
-    let mut result = match args[0].parse::<f64>() {
-        Ok(num) => num,
-        Err(_) => return None, // Return None if parsing fails
-    };
-    for arg_str in args {
-        match arg_str.parse::<f64>() {
-            Ok(arg) => {
-                if arg == 0.0 {
-                    // Return None if division by zero
-                    return None; 
-                }
+    let arg_1 = args[0].parse::<f64>().unwrap();
+    let arg_2 = args[1].parse::<f64>().unwrap();
 
-                result /= arg
-            },
-            Err(_) => return None // Return None if parsing fails
-        }
+    if arg_1 == 0.0 || arg_2 == 0.0 {
+        return None;
     }
 
-    return Some(result);
+    else { 
+        let result: f64 = arg_1 / arg_2;
+        return Some(result);
+    }
 }
 
 // Square function
@@ -137,8 +135,7 @@ fn main() {
         Some(Command::Add{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Error: Subcommand 'add' requires at least one argument.");
-                Opt::clap().print_help().expect("Failed to print help");
+                eprintln!("Usage Error: Subcommand 'add' requires at least one argument.");
             } 
             
             else {
@@ -146,16 +143,15 @@ fn main() {
                 // and print out result
                 match add(args) {
                     Some(result) => println!("Result: {}", result),
-                    None => println!("Invalid input provided or division by zero!"),
+                    None => println!("Usage Error: An invalid input was provided"),
                 }
-                //println!("Result = {}", add(args));
             }
         },
 
         Some(Command::Subtract{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Error: Subcommand 'sub' requires at least one argument.");
+                eprintln!("Usagr Error: Subcommand 'sub' requires at least one argument.");
             } 
             
             else {
@@ -163,7 +159,7 @@ fn main() {
                 // and print out result
                 match subtract(args) {
                     Some(result) => println!("Result: {}", result),
-                    None => println!("Invalid input provided or division by zero!"),
+                    None => println!("Usage Error: An invalid input was provided"),
                 }
             }
         },
@@ -171,7 +167,7 @@ fn main() {
         Some(Command::Multiply{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Error: Subcommand 'mul' requires at least one argument.");
+                eprintln!("Usage Error: Subcommand 'mul' requires at least one argument.");
             } 
             
             else {
@@ -179,7 +175,7 @@ fn main() {
                 // and print out result
                 match multiply(args) {
                     Some(result) => println!("Result: {}", result),
-                    None => println!("Invalid input provided or division by zero!"),
+                    None => println!("Usage Error: An invalid input was provided"),
                 }
             }
         },
@@ -187,7 +183,17 @@ fn main() {
         Some(Command::Divide{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without arguments
-                eprintln!("Error: Subcommand 'div' requires at least one argument.");
+                eprintln!("Usage Error: Subcommand 'div' requires at least two arguments.");
+            }
+
+            else if args.len() < 2 {
+                // Error handling in case user enters subcommand with one argument
+                eprintln!("Usage Error: Subcommand 'div' requires at least two arguments.");
+            }
+
+            else if args.len() > 2 {
+                // Error handling in case user enters subcommand with more than two arguments
+                eprintln!("Usage Error: Subcommand 'div' requires a maximum of two arguments. Can only divide two numbers at time");
             }
             
             else {
@@ -195,7 +201,7 @@ fn main() {
                 // and print out result
                 match divide(args) {
                     Some(result) => println!("Result: {}", result),
-                    None => println!("Invalid input provided or division by zero!"),
+                    None => println!("Usage Error: An invalid input value was provided or you attempted to divide by zero!"),
                 }
             }
         },
@@ -205,18 +211,18 @@ fn main() {
 
             if args.is_empty()  {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Error: Subcommand 'sqr' requires at least one argument.");
+                eprintln!("Usage Error: Subcommand 'sqr' requires at least one argument.");
             }
 
             else if args.len() > 1 {
                 // Error handling in case user enters subcommand without arguments
-                eprintln!("Error: Subcommand 'sqr' requires a maximum of one argument.");
+                eprintln!("Usage Error: Subcommand 'sqr' requires a maximum of one argument.");
             }
 
             else if sqr_arg.is_nan() {
                 // Program panics before getting to this stage. Will fix later
                 // Error handling in case user enters string that cannot be converted to f64
-                eprintln!("Error: Subcommand 'sqr' requires a maximum of one argument.");
+                eprintln!("Usage Error: Subcommand 'sqr' requires a maximum of one argument.");
             }   
             
             else {
@@ -229,7 +235,7 @@ fn main() {
         None => {
             // Handle the case when no subcommand is specified
             // Display the help message
-            Opt::clap().print_help().expect("Failed to print help");
+            Opt::clap().print_help().expect("Application Error: Failed to print help");
         }
     }
 }
