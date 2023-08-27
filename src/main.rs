@@ -16,7 +16,7 @@ use std::option::Option;
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "cmdcalc", about = "A command line calculator")]
+#[structopt(name = "cmdcalc", about = "Command line calculator")]
 struct Opt {
     #[structopt(subcommand)]
     cmd: Option<Command>,
@@ -48,8 +48,14 @@ enum Command {
         args: Vec<String>,
     },
 
-    #[structopt(name = "sqr", about = "Squares on the provided number")]
+    #[structopt(name = "sqr", about = "Squares the provided number")]
     Square {
+        #[structopt(name = "args", min_values = 1)]
+        args: Vec<String>,
+    },
+
+    #[structopt(name = "pow", about = "Takes the first argument and raises it to the power of the second")]
+    Power {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
@@ -118,20 +124,26 @@ fn divide(args: Vec<String>) -> Option<f64> {
 fn square(args: Vec<String>) -> f64 {
     let arg = args[0].parse::<f64>().unwrap();
     let result = arg * arg;
+
+    // NOTE: This function does not return an Option type like some of the others
+    // Therefor error handling has been done inside the match block in main()
+    // where this function is called
     return result;
 }
 
 // power function
-/*fn power(args: Vec<String>) -> f64 {
+fn power(args: Vec<String>) -> f64 {
     let base = args[0].parse::<f64>().unwrap();
-    let num = args[1].parse::<f64>().unwrap();
-    let exp = args[2].parse::<f64>().unwrap();  
-}*/
+    let exp = args[1].parse::<f64>().unwrap();  
+    let result: f64 = base.powf(exp);
+    return result;
+}
 
 fn main() {
     let opt = Opt::from_args();
 
     match opt.cmd {
+        // Add subcommand
         Some(Command::Add{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
@@ -148,6 +160,7 @@ fn main() {
             }
         },
 
+        // Subtract subcommand
         Some(Command::Subtract{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
@@ -164,6 +177,7 @@ fn main() {
             }
         },
 
+        // Multiply subcommand
         Some(Command::Multiply{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
@@ -180,6 +194,7 @@ fn main() {
             }
         },
 
+        // Divide subcommand
         Some(Command::Divide{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without arguments
@@ -206,6 +221,7 @@ fn main() {
             }
         },
 
+        // Square subcommand
         Some(Command::Square{ args }) => {
             let sqr_arg  = args[0].parse::<f64>().expect("Error: Invalid argument");
 
@@ -222,13 +238,40 @@ fn main() {
             else if sqr_arg.is_nan() {
                 // Program panics before getting to this stage. Will fix later
                 // Error handling in case user enters string that cannot be converted to f64
-                eprintln!("Usage Error: Subcommand 'sqr' requires a maximum of one argument.");
+                eprintln!("Usage Error: Argument given is not a numerical value.");
             }   
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
                 println!("Result: {}", square(args));
+            }
+        },
+        
+        // Power subcommand
+        Some(Command::Power{ args }) => {
+            let pow_arg = args[0].parse::<f64>().expect("Error: Invalid argument");
+
+            if args.is_empty()  {
+                // Error handling in case user enters subcommand without providing arguments
+                eprintln!("Usage Error: Subcommand 'sqr' requires at least one argument.");
+            }
+
+            else if args.len() > 2 {
+                // Error handling in case user enters subcommand without arguments
+                eprintln!("Usage Error: Subcommand 'pow' requires a maximum of two arguments.");
+            }
+
+            else if pow_arg.is_nan() {
+                // Program panics before getting to this stage. Will fix later
+                // Error handling in case user enters string that cannot be converted to f64
+                eprintln!("Usage Error: Argument given is not a numerical value.");
+            }   
+            
+            else {
+                // Parse arguments to appropriate function for evaluation
+                // and print out result
+                println!("Result: {}", power(args));
             }
         },
 
