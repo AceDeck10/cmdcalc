@@ -8,7 +8,7 @@
 // Errors: The program genarates two types of errors
 // ** Usage Errors or Application Errors
 // ** Errors resulting from wrong usage by the user should be marked as usage errors
-// ** Errors resulting from the program panicing should ge marked as application errors
+// ** Errors resulting from the program panicing should be marked as application errors
 //
 // ** **
 
@@ -107,8 +107,18 @@ fn multiply(args: Vec<String>) -> Option<f64>{
 
 // Divide the provided parameters
 fn divide(args: Vec<String>) -> Option<f64> {
-    let arg_1 = args[0].parse::<f64>().unwrap();
-    let arg_2 = args[1].parse::<f64>().unwrap();
+    let arg_1: f64 = match args[0].parse::<f64>() {
+        Ok(arg_1) => arg_1,
+        Err(_) => return None
+    };
+    let arg_2: f64 = match args[1].parse::<f64>() {
+        Ok(arg_2) => arg_2,
+        Err(_) => return None
+    };
+
+    if arg_1.is_nan() || arg_2.is_nan() {
+        return None;
+    }
 
     if arg_1 == 0.0 || arg_2 == 0.0 {
         return None;
@@ -121,22 +131,43 @@ fn divide(args: Vec<String>) -> Option<f64> {
 }
 
 // Square function
-fn square(args: Vec<String>) -> f64 {
-    let arg = args[0].parse::<f64>().unwrap();
-    let result = arg * arg;
+fn square(args: Vec<String>) -> Option<f64> {
+    let arg: f64 = match args[0].parse::<f64>(){
+        Ok(arg) => arg,
+        Err(_) => return None
+    };
 
-    // NOTE: This function does not return an Option type like some of the others
-    // Therefor error handling has been done inside the match block in main()
-    // where this function is called
-    return result;
+    if arg.is_nan(){
+        return None;
+    }
+
+    else {
+        let result = arg * arg;
+        return Some(result);
+    }
+    
 }
 
-// power function
-fn power(args: Vec<String>) -> f64 {
-    let base = args[0].parse::<f64>().unwrap();
-    let exp = args[1].parse::<f64>().unwrap();  
-    let result: f64 = base.powf(exp);
-    return result;
+// Power function
+fn power(args: Vec<String>) -> Option<f64> {
+    let base: f64 = match args[0].parse::<f64>() {
+        Ok(base) => base,
+        Err(_) => return None
+    };
+
+    let exp: f64 = match args[1].parse::<f64>() {
+        Ok(base) => base,
+        Err(_) => return None
+    };
+
+    if base.is_nan() || exp.is_nan() {
+        return None;
+    }
+
+    else {
+        let result: f64 = base.powf(exp);
+        return Some(result);
+    }
 }
 
 fn main() {
@@ -160,6 +191,7 @@ fn main() {
             }
         },
 
+
         // Subtract subcommand
         Some(Command::Subtract{ args }) => {
             if args.is_empty() {
@@ -177,6 +209,7 @@ fn main() {
             }
         },
 
+
         // Multiply subcommand
         Some(Command::Multiply{ args }) => {
             if args.is_empty() {
@@ -193,6 +226,7 @@ fn main() {
                 }
             }
         },
+
 
         // Divide subcommand
         Some(Command::Divide{ args }) => {
@@ -216,14 +250,14 @@ fn main() {
                 // and print out result
                 match divide(args) {
                     Some(result) => println!("Result: {}", result),
-                    None => println!("Usage Error: An invalid input value was provided or you attempted to divide by zero!"),
+                    None => println!("Usage Error: An invalid input value (eg a non-numerical value) was provided OR you attempted to divide by zero!"),
                 }
             }
         },
 
+
         // Square subcommand
         Some(Command::Square{ args }) => {
-            let sqr_arg  = args[0].parse::<f64>().expect("Error: Invalid argument");
 
             if args.is_empty()  {
                 // Error handling in case user enters subcommand without providing arguments
@@ -234,46 +268,45 @@ fn main() {
                 // Error handling in case user enters subcommand without arguments
                 eprintln!("Usage Error: Subcommand 'sqr' requires a maximum of one argument.");
             }
-
-            else if sqr_arg.is_nan() {
-                // Program panics before getting to this stage. Will fix later
-                // Error handling in case user enters string that cannot be converted to f64
-                eprintln!("Usage Error: Argument given is not a numerical value.");
-            }   
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                println!("Result: {}", square(args));
+                match square(args){
+                    Some(result) => println!("Result: {}", result),
+                    None => println!("Usage Error: An invalid input value was provided"),
+                }
             }
         },
         
+
         // Power subcommand
         Some(Command::Power{ args }) => {
-            let pow_arg = args[0].parse::<f64>().expect("Error: Invalid argument");
-
             if args.is_empty()  {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Usage Error: Subcommand 'sqr' requires at least one argument.");
+                eprintln!("Usage Error: Subcommand 'pow' requires at least one argument.");
+            }
+
+            else if args.len() < 2 {
+                // Error handling in case user enters subcommand without arguments
+                eprintln!("Usage Error: Subcommand 'pow' requires a minimum of two arguments.");
             }
 
             else if args.len() > 2 {
                 // Error handling in case user enters subcommand without arguments
                 eprintln!("Usage Error: Subcommand 'pow' requires a maximum of two arguments.");
             }
-
-            else if pow_arg.is_nan() {
-                // Program panics before getting to this stage. Will fix later
-                // Error handling in case user enters string that cannot be converted to f64
-                eprintln!("Usage Error: Argument given is not a numerical value.");
-            }   
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                println!("Result: {}", power(args));
+                match power(args) {
+                    Some(result) => println!("Result: {}", result),
+                    None => println!("Usage Error: An invalid input value was provided"),
+                }
             }
         },
+
 
         None => {
             // Handle the case when no subcommand is specified
