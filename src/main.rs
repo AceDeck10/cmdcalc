@@ -24,37 +24,43 @@ struct Opt {
 
 #[derive(Debug, StructOpt)]
 enum Command {
-    #[structopt(name = "add", about = "Performs addition on the provided numbers")]
+    #[structopt(name = "add", about = "Add: Performs addition on the provided numbers")]
     Add {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
 
-    #[structopt(name = "sub", about = "Performs subtruction on the provided numbers IN THE ORDER PROVIDED")]
+    #[structopt(name = "sub", about = "Subtract: Performs subtruction on the provided numbers IN THE ORDER PROVIDED")]
     Subtract {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
 
-    #[structopt(name = "mul", about = "Performs mutltiplication on the provided numbers")]
+    #[structopt(name = "mul", about = "Multiply: Performs mutltiplication on the provided numbers")]
     Multiply {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
 
-    #[structopt(name = "div", about = "Performs division on the provided numbers IN THE ORDER PROVIDED")]
+    #[structopt(name = "div", about = "Divide: Performs division on the provided numbers IN THE ORDER PROVIDED")]
     Divide {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
 
-    #[structopt(name = "sqr", about = "Squares the provided number")]
+    #[structopt(name = "sqr", about = "Square: Squares the provided number")]
     Square {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
 
-    #[structopt(name = "pow", about = "Takes the first argument and raises it to the power of the second")]
+    #[structopt(name = "sqrt", about = "Square root: Squares the provided number")]
+    SquareRoot {
+        #[structopt(name = "args", min_values = 1)]
+        args: Vec<String>,
+    },
+
+    #[structopt(name = "pow", about = "Power: Takes the first argument and raises it to the power of the second")]
     Power {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
@@ -147,6 +153,23 @@ fn square(args: Vec<String>) -> Option<f64> {
     }
     
 }
+
+// Square root function
+fn square_root(args: Vec<String>) -> Option<f64> {
+    let arg: f64 = match args[0].parse::<f64>(){
+        Ok(arg) => arg,
+        Err(_) => return None
+    };
+
+    if arg.is_nan(){
+        return None;
+    }
+
+    else {
+        let result = arg.sqrt();
+        return Some(result);
+    }
+} 
 
 // Power function
 fn power(args: Vec<String>) -> Option<f64> {
@@ -273,6 +296,30 @@ fn main() {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
                 match square(args){
+                    Some(result) => println!("Result: {}", result),
+                    None => println!("Usage Error: An invalid input value was provided"),
+                }
+            }
+        },
+
+
+        // Square root subcommand
+        Some(Command::SquareRoot{ args }) => {
+
+            if args.is_empty()  {
+                // Error handling in case user enters subcommand without providing arguments
+                eprintln!("Usage Error: Subcommand 'sqrt' requires at least one argument.");
+            }
+
+            else if args.len() > 1 {
+                // Error handling in case user enters subcommand without arguments
+                eprintln!("Usage Error: Subcommand 'sqrt' requires a maximum of one argument.");
+            }
+            
+            else {
+                // Parse arguments to appropriate function for evaluation
+                // and print out result
+                match square_root(args){
                     Some(result) => println!("Result: {}", result),
                     None => println!("Usage Error: An invalid input value was provided"),
                 }
