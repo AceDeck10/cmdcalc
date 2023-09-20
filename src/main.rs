@@ -12,7 +12,8 @@
 //
 // ** **
 
-use std::option::Option;
+
+//use std::{option::Option, env::args};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -36,7 +37,7 @@ enum Command {
         args: Vec<String>,
     },
 
-    #[structopt(name = "mul", about = "Multiply: Performs mutltiplication on the provided numbers")]
+    #[structopt(name = "mul", about = "Multiply: Performs multiplication on the provided numbers")]
     Multiply {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
@@ -68,7 +69,7 @@ enum Command {
 }
 
 // Add the provided parameters
-fn add(args: Vec<String>) -> Option<f64> {
+fn add(args: &Vec<String>) -> Option<f64> {
     let mut result: f64 = 0.0;
     for arg_str in args {
         match arg_str.parse::<f64>() {
@@ -81,7 +82,7 @@ fn add(args: Vec<String>) -> Option<f64> {
 }
 
 // Subtruct the provided parameters
-fn subtract(args: Vec<String>) -> Option<f64> {
+fn subtract(args: &Vec<String>) -> Option<f64> {
     let mut result: f64 = match args[0].parse::<f64>() {
         Ok(num) => num,
         Err(_) => return None // Return None if parsing fails
@@ -99,7 +100,7 @@ fn subtract(args: Vec<String>) -> Option<f64> {
 }
 
 // Multiply the provided parameters
-fn multiply(args: Vec<String>) -> Option<f64>{
+fn multiply(args: &Vec<String>) -> Option<f64>{
     let mut result: f64 = 1.0;
     for arg_str in args {
         match arg_str.parse::<f64>() {
@@ -112,7 +113,7 @@ fn multiply(args: Vec<String>) -> Option<f64>{
 }
 
 // Divide the provided parameters
-fn divide(args: Vec<String>) -> Option<f64> {
+fn divide(args: &Vec<String>) -> Option<f64> {
     let arg_1: f64 = match args[0].parse::<f64>() {
         Ok(arg_1) => arg_1,
         Err(_) => return None
@@ -137,7 +138,7 @@ fn divide(args: Vec<String>) -> Option<f64> {
 }
 
 // Square function
-fn square(args: Vec<String>) -> Option<f64> {
+fn square(args: &Vec<String>) -> Option<f64> {
     let arg: f64 = match args[0].parse::<f64>(){
         Ok(arg) => arg,
         Err(_) => return None
@@ -155,7 +156,7 @@ fn square(args: Vec<String>) -> Option<f64> {
 }
 
 // Square root function
-fn square_root(args: Vec<String>) -> Option<f64> {
+fn square_root(args: &Vec<String>) -> Option<f64> {
     let arg: f64 = match args[0].parse::<f64>(){
         Ok(arg) => arg,
         Err(_) => return None
@@ -172,7 +173,7 @@ fn square_root(args: Vec<String>) -> Option<f64> {
 } 
 
 // Power function
-fn power(args: Vec<String>) -> Option<f64> {
+fn power(args: &Vec<String>) -> Option<f64> {
     let base: f64 = match args[0].parse::<f64>() {
         Ok(base) => base,
         Err(_) => return None
@@ -201,15 +202,15 @@ fn main() {
         Some(Command::Add{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Usage Error: Subcommand 'add' requires at least one argument.");
+                eprintln!(" Function: Add \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'add' requires at least one argument.", args);
             } 
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                match add(args) {
-                    Some(result) => println!("Result: {}", result),
-                    None => println!("Usage Error: An invalid input was provided"),
+                match add(&args) {
+                    Some(result) => println!(" Function: Add \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Add \n Input(s): {:?}  \n Result: Usage Error: An invalid input was provided.", args),
                 }
             }
         },
@@ -219,15 +220,15 @@ fn main() {
         Some(Command::Subtract{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Usagr Error: Subcommand 'sub' requires at least one argument.");
+                eprintln!(" Function: Subtract \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'sub' requires at least one argument.", args);
             } 
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                match subtract(args) {
-                    Some(result) => println!("Result: {}", result),
-                    None => println!("Usage Error: An invalid input was provided"),
+                match subtract(&args) {
+                    Some(result) => println!(" Function: Subtract \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Subtract \n Input(s): {:?}  \n Result: Usage Error: An invalid input was provided", args),
                 }
             }
         },
@@ -237,15 +238,15 @@ fn main() {
         Some(Command::Multiply{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Usage Error: Subcommand 'mul' requires at least one argument.");
+                eprintln!(" Function: Multiply \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'mul' requires at least one argument.", args);
             } 
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                match multiply(args) {
-                    Some(result) => println!("Result: {}", result),
-                    None => println!("Usage Error: An invalid input was provided"),
+                match multiply(&args) {
+                    Some(result) => println!(" Function: Multiply \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Multiply \n Input(s): {:?}  \n Result: Usage Error: An invalid input was provided", args),
                 }
             }
         },
@@ -255,25 +256,25 @@ fn main() {
         Some(Command::Divide{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without arguments
-                eprintln!("Usage Error: Subcommand 'div' requires at least two arguments.");
+                eprintln!(" Function: Divide \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'div' requires at least two arguments.", args);
             }
 
             else if args.len() < 2 {
                 // Error handling in case user enters subcommand with one argument
-                eprintln!("Usage Error: Subcommand 'div' requires at least two arguments.");
+                eprintln!(" Function: Divide \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'div' requires at least two arguments.", args);
             }
 
             else if args.len() > 2 {
                 // Error handling in case user enters subcommand with more than two arguments
-                eprintln!("Usage Error: Subcommand 'div' requires a maximum of two arguments. Can only divide two numbers at time");
+                eprintln!(" Function: Divide \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'div' requires a maximum of two arguments. Can only divide two numbers at time", args);
             }
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                match divide(args) {
-                    Some(result) => println!("Result: {}", result),
-                    None => println!("Usage Error: An invalid input value (eg a non-numerical value) was provided OR you attempted to divide by zero!"),
+                match divide(&args) {
+                    Some(result) => println!(" Function: Divide \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Divide \n Input(s): {:?}  \n Result: Usage Error: An invalid input value (eg a non-numerical value) was provided OR you attempted to divide by zero!", args),
                 }
             }
         },
@@ -284,20 +285,20 @@ fn main() {
 
             if args.is_empty()  {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Usage Error: Subcommand 'sqr' requires at least one argument.");
+                eprintln!(" Function: Square \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'sqr' requires at least one argument.", args);
             }
 
             else if args.len() > 1 {
                 // Error handling in case user enters subcommand without arguments
-                eprintln!("Usage Error: Subcommand 'sqr' requires a maximum of one argument.");
+                eprintln!(" Function: Square \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'sqr' requires a maximum of one argument.", args);
             }
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                match square(args){
-                    Some(result) => println!("Result: {}", result),
-                    None => println!("Usage Error: An invalid input value was provided"),
+                match square(&args){
+                    Some(result) => println!(" Function: Square \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Square \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
                 }
             }
         },
@@ -308,20 +309,20 @@ fn main() {
 
             if args.is_empty()  {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Usage Error: Subcommand 'sqrt' requires at least one argument.");
+                eprintln!(" Function: Square root \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'sqrt' requires at least one argument.", args);
             }
 
             else if args.len() > 1 {
                 // Error handling in case user enters subcommand without arguments
-                eprintln!("Usage Error: Subcommand 'sqrt' requires a maximum of one argument.");
+                eprintln!(" Function: Square root \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'sqrt' requires a maximum of one argument.", args);
             }
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                match square_root(args){
-                    Some(result) => println!("Result: {}", result),
-                    None => println!("Usage Error: An invalid input value was provided"),
+                match square_root(&args){
+                    Some(result) => println!(" Function: Square root \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Square root \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
                 }
             }
         },
@@ -331,25 +332,25 @@ fn main() {
         Some(Command::Power{ args }) => {
             if args.is_empty()  {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!("Usage Error: Subcommand 'pow' requires at least one argument.");
+                eprintln!(" Function: power \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'pow' requires at least one argument.", args);
             }
 
             else if args.len() < 2 {
                 // Error handling in case user enters subcommand without arguments
-                eprintln!("Usage Error: Subcommand 'pow' requires a minimum of two arguments.");
+                eprintln!(" Function: Power \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'pow' requires a minimum of two arguments.", args);
             }
 
             else if args.len() > 2 {
                 // Error handling in case user enters subcommand without arguments
-                eprintln!("Usage Error: Subcommand 'pow' requires a maximum of two arguments.");
+                eprintln!(" Function: Power \n Input(s): {:?}  \n Result:Usage Error: Subcommand 'pow' requires a maximum of two arguments.", args);
             }
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
-                match power(args) {
-                    Some(result) => println!("Result: {}", result),
-                    None => println!("Usage Error: An invalid input value was provided"),
+                match power(&args) {
+                    Some(result) => println!(" Function: Power \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Power \n Input(s): {:?}  \n Result:Usage Error: An invalid input value was provided", args),
                 }
             }
         },
