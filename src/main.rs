@@ -5,15 +5,13 @@
 //
 // @author Austine D. Odhiambo aka Ace Declan
 //
-// Errors: The program genarates two types of errors
-// ** Usage Errors or Application Errors
-// ** Errors resulting from wrong usage by the user should be marked as usage errors
-// ** Errors resulting from the program panicing should be marked as application errors
+// ** Errors: The program genarates two types of errors
+// **** Usage Errors or Application Errors
+// **** Errors resulting from wrong usage by the user should be marked as usage errors
+// **** Errors resulting from the program panicing should be marked as application errors
 //
 // ** **
 
-
-//use std::{option::Option, env::args};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
