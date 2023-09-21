@@ -64,6 +64,12 @@ enum Command {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
+
+    #[structopt(name = "add", about = "Mean: Performs addition on the provided numbers the divides the result by the number of rlements")]
+    Mean {
+        #[structopt(name = "args", min_values = 1)]
+        args: Vec<String>,
+    },
 }
 
 // Add the provided parameters
@@ -190,6 +196,19 @@ fn power(args: &Vec<String>) -> Option<f64> {
         let result: f64 = base.powf(exp);
         return Some(result);
     }
+}
+
+// Mean function
+fn mean(args: &Vec<String>) -> Option<f64> {
+    let mut result: f64 = 0.0;
+    for arg_str in args {
+        match arg_str.parse::<f64>() {
+            Ok(arg) => (result += arg) / args.len(),
+            Err(_) => return None // Return None if parsing fails
+        };
+    }
+
+    return Some(result);
 }
 
 fn main() {
@@ -349,6 +368,23 @@ fn main() {
                 match power(&args) {
                     Some(result) => println!(" Function: Power \n Input(s): {:?} \n Result: {}", args, result),
                     None => println!(" Function: Power \n Input(s): {:?}  \n Result:Usage Error: An invalid input value was provided", args),
+                }
+            }
+        },
+
+        // Mean subcommand
+        Some(Command::Mean{ args }) => {
+            if args.is_empty() {
+                // Error handling in case user enters subcommand without providing arguments
+                eprintln!(" Function: Add \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'add' requires at least one argument.", args);
+            } 
+            
+            else {
+                // Parse arguments to appropriate function for evaluation
+                // and print out result
+                match mean(&args) {
+                    Some(result) => println!(" Function: Add \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Add \n Input(s): {:?}  \n Result: Usage Error: An invalid input was provided.", args),
                 }
             }
         },
