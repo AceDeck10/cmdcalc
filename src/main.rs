@@ -65,7 +65,7 @@ enum Command {
         args: Vec<String>,
     },
 
-    #[structopt(name = "add", about = "Mean: Performs addition on the provided numbers the divides the result by the number of rlements")]
+    #[structopt(name = "mn", about = "Mean: Performs addition on the provided numbers the divides the result by the number of rlements")]
     Mean {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
