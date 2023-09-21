@@ -203,10 +203,12 @@ fn mean(args: &Vec<String>) -> Option<f64> {
     let mut result: f64 = 0.0;
     for arg_str in args {
         match arg_str.parse::<f64>() {
-            Ok(arg) => (result += arg) / args.len(),
+            Ok(arg) => result += arg,
             Err(_) => return None // Return None if parsing fails
         };
     }
+    
+    result = result / args.len() as f64;
 
     return Some(result);
 }
