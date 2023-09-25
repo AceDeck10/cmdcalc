@@ -378,15 +378,15 @@ fn main() {
         Some(Command::Mean{ args }) => {
             if args.is_empty() {
                 // Error handling in case user enters subcommand without providing arguments
-                eprintln!(" Function: Add \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'add' requires at least one argument.", args);
+                eprintln!(" Function: Mean \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'mn' requires at least one argument.", args);
             } 
             
             else {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
                 match mean(&args) {
-                    Some(result) => println!(" Function: Add \n Input(s): {:?} \n Result: {}", args, result),
-                    None => println!(" Function: Add \n Input(s): {:?}  \n Result: Usage Error: An invalid input was provided.", args),
+                    Some(result) => println!(" Function: Mean \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Mean \n Input(s): {:?}  \n Result: Usage Error: An invalid input was provided.", args),
                 }
             }
         },
