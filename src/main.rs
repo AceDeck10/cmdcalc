@@ -65,8 +65,26 @@ enum Command {
         args: Vec<String>,
     },
 
-    #[structopt(name = "mn", about = "Mean: Performs addition on the provided numbers the divides the result by the number of rlements")]
+    #[structopt(name = "mn", about = "Mean: Performs addition on the provided numbers the divides the result by the number of elements")]
     Mean {
+        #[structopt(name = "args", min_values = 1)]
+        args: Vec<String>,
+    },
+
+    #[structopt(name = "sin", about = "Sine: Returns the sine of the number given")]
+    Sine {
+        #[structopt(name = "args", min_values = 1)]
+        args: Vec<String>,
+    },
+
+    #[structopt(name = "cos", about = "Cosine: Returns the cosine of the number given")]
+    Cosine {
+        #[structopt(name = "args", min_values = 1)]
+        args: Vec<String>,
+    },
+
+    #[structopt(name = "tan", about = "Tangent: Returns the tangent of the number given")]
+    Tangent {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
@@ -211,6 +229,57 @@ fn mean(args: &Vec<String>) -> Option<f64> {
     result = result / args.len() as f64;
 
     return Some(result);
+}
+
+// Sine function
+fn sine(args: &Vec<String>) -> Option<f64> {
+    let arg: f64 = match args[0].parse::<f64>(){
+        Ok(arg) => arg,
+        Err(_) => return None
+    };
+
+    if arg.is_nan(){
+        return None;
+    }
+
+    else {
+        let result = arg.sin();
+        return Some(result);
+    }
+}
+
+// Cosine function
+fn cosine(args: &Vec<String>) -> Option<f64> {
+    let arg: f64 = match args[0].parse::<f64>(){
+        Ok(arg) => arg,
+        Err(_) => return None
+    };
+
+    if arg.is_nan(){
+        return None;
+    }
+
+    else {
+        let result = arg.cos();
+        return Some(result);
+    }
+}
+
+// Tangent function
+fn tangent(args: &Vec<String>) -> Option<f64> {
+    let arg: f64 = match args[0].parse::<f64>(){
+        Ok(arg) => arg,
+        Err(_) => return None
+    };
+
+    if arg.is_nan(){
+        return None;
+    }
+
+    else {
+        let result = arg.tan();
+        return Some(result);
+    }
 }
 
 fn main() {
@@ -374,6 +443,7 @@ fn main() {
             }
         },
 
+
         // Mean subcommand
         Some(Command::Mean{ args }) => {
             if args.is_empty() {
@@ -387,6 +457,77 @@ fn main() {
                 match mean(&args) {
                     Some(result) => println!(" Function: Mean \n Input(s): {:?} \n Result: {}", args, result),
                     None => println!(" Function: Mean \n Input(s): {:?}  \n Result: Usage Error: An invalid input was provided.", args),
+                }
+            }
+        },
+
+
+        // Sine subcommand
+        Some(Command::Sine{ args }) => {
+
+            if args.is_empty()  {
+                // Error handling in case user enters subcommand without providing arguments
+                eprintln!(" Function: Sine \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'sin' requires at least one argument.", args);
+            }
+
+            else if args.len() > 1 {
+                // Error handling in case user enters subcommand without arguments
+                eprintln!(" Function: Sin \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'sin' requires a maximum of one argument.", args);
+            }
+            
+            else {
+                // Parse arguments to appropriate function for evaluation
+                // and print out result
+                match sine(&args){
+                    Some(result) => println!(" Function: Square \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Sin \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
+                }
+            }
+        },
+
+        // Cosine subcommand
+        Some(Command::Cosine{ args }) => {
+
+            if args.is_empty()  {
+                // Error handling in case user enters subcommand without providing arguments
+                eprintln!(" Function: Cosine \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'cos' requires at least one argument.", args);
+            }
+
+            else if args.len() > 1 {
+                // Error handling in case user enters subcommand without arguments
+                eprintln!(" Function: Cosine \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'cos' requires a maximum of one argument.", args);
+            }
+            
+            else {
+                // Parse arguments to appropriate function for evaluation
+                // and print out result
+                match cosine(&args){
+                    Some(result) => println!(" Function: Square \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Cosine \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
+                }
+            }
+        },
+
+
+        // Tangent subcommand
+        Some(Command::Tangent{ args }) => {
+
+            if args.is_empty()  {
+                // Error handling in case user enters subcommand without providing arguments
+                eprintln!(" Function: Tangent \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'tan' requires at least one argument.", args);
+            }
+
+            else if args.len() > 1 {
+                // Error handling in case user enters subcommand without arguments
+                eprintln!(" Function: Tangent \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'tan' requires a maximum of one argument.", args);
+            }
+            
+            else {
+                // Parse arguments to appropriate function for evaluation
+                // and print out result
+                match tangent(&args){
+                    Some(result) => println!(" Function: Square \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Tangent \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
                 }
             }
         },
