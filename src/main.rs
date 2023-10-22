@@ -88,6 +88,12 @@ enum Command {
         #[structopt(name = "args", min_values = 1)]
         args: Vec<String>,
     },
+
+    #[structopt(name = "log", about = "Logarithm (Base 10): Returns the base 10 logarithm of the number given")]
+    Logarithm {
+        #[structopt(name = "args", min_values = 1)]
+        args: Vec<String>,
+    },
 }
 
 // Add the provided parameters
@@ -278,6 +284,23 @@ fn tangent(args: &Vec<String>) -> Option<f64> {
 
     else {
         let result = arg.tan();
+        return Some(result);
+    }
+}
+
+// Logarithm function
+fn logarithm(args: &Vec<String>) -> Option<f64> {
+    let arg: f64 = match args[0].parse::<f64>(){
+        Ok(arg) => arg,
+        Err(_) => return None
+    };
+
+    if arg.is_nan(){
+        return None;
+    }
+
+    else {
+        let result = f64::log10(arg);
         return Some(result);
     }
 }
@@ -479,7 +502,7 @@ fn main() {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
                 match sine(&args){
-                    Some(result) => println!(" Function: Square \n Input(s): {:?} \n Result: {}", args, result),
+                    Some(result) => println!(" Function: Sine \n Input(s): {:?} \n Result: {}", args, result),
                     None => println!(" Function: Sin \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
                 }
             }
@@ -502,7 +525,7 @@ fn main() {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
                 match cosine(&args){
-                    Some(result) => println!(" Function: Square \n Input(s): {:?} \n Result: {}", args, result),
+                    Some(result) => println!(" Function: Cosine \n Input(s): {:?} \n Result: {}", args, result),
                     None => println!(" Function: Cosine \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
                 }
             }
@@ -526,13 +549,36 @@ fn main() {
                 // Parse arguments to appropriate function for evaluation
                 // and print out result
                 match tangent(&args){
-                    Some(result) => println!(" Function: Square \n Input(s): {:?} \n Result: {}", args, result),
+                    Some(result) => println!(" Function: Tangent \n Input(s): {:?} \n Result: {}", args, result),
                     None => println!(" Function: Tangent \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
                 }
             }
         },
 
+        // Logarithm subcommand
+        Some(Command::Logarithm{ args }) => {
 
+            if args.is_empty()  {
+                // Error handling in case user enters subcommand without providing arguments
+                eprintln!(" Function: Logarithm (Base 10) \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'log' requires at least one argument.", args);
+            }
+
+            else if args.len() > 1 {
+                // Error handling in case user enters subcommand without arguments
+                eprintln!(" Function: Logarithm (Base 10) \n Input(s): {:?}  \n Result: Usage Error: Subcommand 'log' requires a maximum of one argument.", args);
+            }
+            
+            else {
+                // Parse arguments to appropriate function for evaluation
+                // and print out result
+                match logarithm(&args){
+                    Some(result) => println!(" Function: Logarithm (Base 10) \n Input(s): {:?} \n Result: {}", args, result),
+                    None => println!(" Function: Logarithm (Base 10) \n Input(s): {:?}  \n Result: Usage Error: An invalid input value was provided", args),
+                }
+            }
+        },
+
+        
         None => {
             // Handle the case when no subcommand is specified
             // Display the help message
